@@ -1,3 +1,7 @@
+variable "rookout_token" {
+  type = string
+}
+
 resource "aws_iam_role" "iam_for_lambda" {
   name = "iam_for_lambda"
 
@@ -35,7 +39,8 @@ resource "aws_lambda_function" "test_lambda" {
 
   environment {
     variables = {
-      foo = "bar"
+      ROOKOUT_TOKEN = var.rookout_token
+      ROOKOUT_ROOK_TAGS = "lambda"
     }
   }
 }
