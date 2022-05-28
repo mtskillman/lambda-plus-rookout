@@ -4,6 +4,7 @@ variable "rookout_token" {
 
 resource "aws_iam_role" "iam_for_lambda" {
   name = "iam_for_lambda"
+  managed_policy_arns = ["arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"]
 
   assume_role_policy = <<EOF
 {
@@ -29,7 +30,10 @@ resource "aws_lambda_function" "test_lambda" {
   function_name = "matt-rookout"
   role          = aws_iam_role.iam_for_lambda.arn
   handler       = "main.handler"
-
+  timeout = 10
+#  layers = [
+#    "arn:aws:lambda:us-east-1:032275105219:layer:rookout_python39_v_0_1_169_1:1"
+#  ]
   # The filebase64sha256() function is available in Terraform 0.11.12 and later
   # For Terraform 0.11.11 and earlier, use the base64sha256() function and the file() function:
   # source_code_hash = "${base64sha256(file("lambda_function_payload.zip"))}"
@@ -41,6 +45,8 @@ resource "aws_lambda_function" "test_lambda" {
     variables = {
       ROOKOUT_TOKEN = var.rookout_token
       ROOKOUT_ROOK_TAGS = "lambda"
+      ROOKOUT_DEBUG = 1
+      ROOKOUT_LOG_TO_STDERR = 1
     }
   }
 }

@@ -16,7 +16,9 @@ def handler(event: Dict[fruitname, fruitcount], _):
     top_fruits = []
     for fruit_name, fruit_count in event.items():
         if fruit_name in valid_fruits:
+            print(f'fruit name {fruit_name} found in valid fruits')
             top_fruits.append(fruit_count)
+    print('top fruits: ', top_fruits)
     return {
         'statusCode': 200,
         'body': json.dumps({
